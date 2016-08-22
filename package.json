@@ -1,0 +1,26 @@
+{
+  "name": "flip-my-animation",
+  "version": "1.0.0",
+  "description": "Flip My Animation",
+  "scripts": {
+    "start": "webpack-dev-server --inline --hot --quiet"
+  },
+  "author": "katashin",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.13.2",
+    "css-loader": "^0.23.1",
+    "eslint": "^3.3.1",
+    "eslint-config-standard": "^6.0.0-beta.3",
+    "eslint-plugin-promise": "^2.0.1",
+    "eslint-plugin-standard": "^2.0.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {
+    "todomvc-app-css": "^2.0.6",
+    "whatwg-fetch": "^1.0.0"
+  }
+}
