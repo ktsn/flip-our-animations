@@ -1,5 +1,6 @@
 module.exports = {
   entry: {
+    jquery: e('./jquery/main.js')
   },
   output: {
     path: __dirname,
