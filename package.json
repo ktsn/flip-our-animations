@@ -1,7 +1,7 @@
 {
-  "name": "flip-my-animation",
+  "name": "flip-my-animations",
   "version": "1.0.0",
-  "description": "Flip My Animation",
+  "description": "FLIP My Animations",
   "scripts": {
     "start": "webpack-dev-server --inline --hot --quiet"
   },
