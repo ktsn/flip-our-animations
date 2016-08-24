@@ -1,7 +1,5 @@
 module.exports = {
-  entry: {
-    jquery: e('./jquery/main.js')
-  },
+  entry: e(['jquery', 'react']),
   output: {
     path: __dirname,
     filename: '[name]/__build__.js'
@@ -15,6 +13,10 @@ module.exports = {
   devtool: 'source-map'
 }
 
-function e (file) {
-  return ['todomvc-app-css/index.css', './shared.css', 'whatwg-fetch', file]
+function e (names) {
+  const entries = {}
+  names.forEach(name => {
+    entries[name] = ['todomvc-app-css/index.css', './shared.css', 'whatwg-fetch', `./${name}/main.js`]
+  })
+  return entries
 }
