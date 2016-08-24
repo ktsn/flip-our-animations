@@ -4,7 +4,7 @@
   "description": "FLIP My Animations",
   "scripts": {
     "start": "webpack-dev-server --inline --hot --quiet",
-    "lint": "eslint --ignore-pattern node_modules/**"
+    "lint": "eslint --ignore-path .gitignore ."
   },
   "author": "katashin",
   "license": "MIT",
