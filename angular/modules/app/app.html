@@ -1,0 +1,40 @@
+<section class="todoapp">
+  <header class="header">
+    <h1>todos</h1>
+    <input
+      class="new-todo" 
+      placeholder="What needs to be done?" 
+      autofocus
+      [(ngModel)]="todoTitle"
+      (keypress)="onKeyPressHeader($event)">
+  </header>
+  <footer class="footer">
+    <span class="todo-count"><strong>{{ filteredTodos('active').length }}</strong> item left</span>
+    <ul class="filters">
+      <li>
+        <a [class.selected]="filter === 'all'" (click)="filter = 'all'" href="#/">All</a>
+      </li>
+      <li>
+        <a [class.selected]="filter === 'active'" (click)="filter = 'active'" href="#/active">Active</a>
+      </li>
+      <li>
+        <a [class.selected]="filter === 'completed'" (click)="filter = 'completed'" href="#/completed">Completed</a>
+      </li>
+    </ul>
+    <button class="clear-completed" (click)="clearCompleted()">Clear completed</button>
+  </footer>
+  <section class="main">
+    <ul class="todo-list">
+      <li *ngFor="let todo of filteredTodos(filter)" 
+        [class.completed]="todo.completed"
+        [class.editing]="todo.editing">
+        <div class="view">
+          <input class="toggle" type="checkbox" [(ngModel)]="todo.completed">
+          <label (dblclick)="todo.editing = true">{{ todo.title }}</label>
+          <button class="destroy" (click)="removeTodo(todo)"></button>
+        </div>
+        <input class="edit" [(ngModel)]="todo.title" (blur)="todo.editing = false">
+      </li>
+    </ul>
+  </section>
+</section>
