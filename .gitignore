@@ -1,2 +1,4 @@
 node_modules/
 __build__.js
+__build__.js.map
+typings/
