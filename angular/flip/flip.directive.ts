@@ -48,19 +48,20 @@ export class FlipDirective implements OnInit, OnChanges {
 
     if (!dx && !dy) return
 
-    const s = native.style
-    s.transitionDuration = '0s'
-    s.transform = `translate(${dx}px, ${dy}px)`
+    const r = this.renderer
+    r.setElementStyle(native, 'transitionDuration', '0s')
+    r.setElementStyle(native, 'transform', `translate(${dx}px, ${dy}px)`)
 
     this.zone.runOutsideAngular(() => {
       requestAnimationFrame(() => {
-        native.classList.add(this.moveClass)
-        s.transitionDuration = s.transform = ''
+        r.setElementClass(native, this.moveClass, true)
+        r.setElementStyle(native, 'transitionDuration', '')
+        r.setElementStyle(native, 'transform', '')
 
         native.addEventListener('transitionend', this.moveCb = (event?: TransitionEvent) => {
           if (!event || /transform$/i.test(event.propertyName)) {
             native.removeEventListener('transitionend', this.moveCb)
-            native.classList.remove(this.moveClass)
+            r.setElementClass(native, this.moveClass, false)
             this.moveCb = null
           }
         })
