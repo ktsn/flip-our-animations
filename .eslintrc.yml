@@ -2,6 +2,8 @@
   extends:
     - standard
     - plugin:react/recommended
+  globals:
+    riot: true
   plugins:
     - react
   parser: babel-eslint

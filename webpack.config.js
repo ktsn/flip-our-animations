@@ -1,24 +1,33 @@
+const webpack = require('webpack')
+
 module.exports = {
   entry: e([
     'jquery',
     'react',
-    ['angular', 'ts']
+    ['angular', 'ts'],
+    'riot'
   ]),
   output: {
     path: __dirname,
     filename: '[name]/__build__.js'
   },
   resolve: {
-    extensions: ['', '.js', '.ts']
+    extensions: ['', '.js', '.ts', '.tag']
   },
   module: {
     loaders: [
       { test: /\.css$/, loader: 'style!css', exclude: /angular/ },
       { test: /\.(html|css)$/, loader: 'raw', include: /angular/ },
-      { test: /\.js$/, loader: 'babel', exclude: /node_modules/ },
-      { test: /\.ts$/, loader: 'awesome-typescript!angular2-template' }
+      { test: /\.ts$/, loader: 'awesome-typescript!angular2-template', include: /angular/ },
+      { test: /\.tag$/, loader: 'babel!riotjs', include: /riot/ },
+      { test: /\.js$/, loader: 'babel', exclude: /node_modules/ }
     ]
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      riot: 'riot'
+    })
+  ],
   devtool: 'source-map'
 }
 
@@ -31,8 +40,6 @@ function e (names) {
     entries[name[0]] = [
       'todomvc-app-css/index.css',
       './shared.css',
-      'core-js/client/shim',
-      'zone.js',
       'whatwg-fetch',
       `./${name[0]}/main.${name[1]}`
     ]

@@ -1,5 +1,5 @@
-import { 
-  Directive, 
+import {
+  Directive,
   Input,
   OnInit,
   OnChanges,
@@ -22,14 +22,14 @@ export class FlipDirective implements OnInit, OnChanges {
   private pos: { left: number, top: number } | null = null
 
   constructor (
-    private el: ElementRef, 
+    private el: ElementRef,
     private renderer: Renderer,
     private zone: NgZone
   ) {}
 
   ngOnInit (): void {
     this.pos = this.el.nativeElement.getBoundingClientRect()
-  } 
+  }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (!this.pos) return
