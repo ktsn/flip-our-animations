@@ -25,7 +25,8 @@
   </footer>
   <section class="main">
     <ul class="todo-list">
-      <li *ngFor="let todo of filteredTodos(filter)" 
+      <li *ngFor="let todo of filteredTodos(filter)"
+        [flip]="filteredTodos(filter)"
         [class.completed]="todo.completed"
         [class.editing]="todo.editing">
         <div class="view">
