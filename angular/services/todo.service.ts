@@ -28,6 +28,10 @@ export class TodoService {
     this.todos.unshift(newTodo)
   }
 
+  removeTodo (todo: Todo): void {
+    this.todos = this.todos.filter(t => t.id !== todo.id)
+  }
+
   fetchTodos (): void {
     this.http.get('https://jsonplaceholder.typicode.com/todos')
       .map(res => res.json())

@@ -29,6 +29,10 @@ export class AppComponent implements OnInit {
     }
   }
 
+  removeTodo (todo: Todo): void {
+    this.todoService.removeTodo(todo)
+  }
+
   clearCompleted (): void {
     this.todoService.clearCompleted()
   }
