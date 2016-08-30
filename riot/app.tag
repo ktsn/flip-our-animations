@@ -20,13 +20,14 @@
       <button onclick={ onClearCompleted } class="clear-completed">Clear completed</button>
     </footer>
     <section class="main">
-      <ul class="todo-list">
-        <todo each={ filteredTodos(filter) } todo={ this }></todo>
+      <ul riot-tag="flip" class="todo-list">
+        <li riot-tag="todo" key={ id } each={ parent.filteredTodos(parent.filter) } todo={ this }></li>
       </ul>
     </section>
   </section>
 
   <script>
+  import './flip'
   import './tags/todo'
 
   this.todoTitle = ''
