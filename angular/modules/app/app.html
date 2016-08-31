@@ -2,8 +2,8 @@
   <header class="header">
     <h1>todos</h1>
     <input
-      class="new-todo" 
-      placeholder="What needs to be done?" 
+      class="new-todo"
+      placeholder="What needs to be done?"
       autofocus
       [(ngModel)]="todoTitle"
       (keypress)="onKeyPressHeader($event)">
@@ -25,7 +25,7 @@
   </footer>
   <section class="main">
     <ul class="todo-list">
-      <li *ngFor="let todo of filteredTodos(filter)"
+      <li *ngFor="let todo of filteredTodos(filter); trackBy: todo?.id;"
         [flip]="filteredTodos(filter)"
         [class.completed]="todo.completed"
         [class.editing]="todo.editing">

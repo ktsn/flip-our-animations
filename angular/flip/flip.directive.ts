@@ -1,7 +1,6 @@
 import {
   Directive,
   Input,
-  OnInit,
   OnChanges,
   ContentChild,
   SimpleChanges,
@@ -14,7 +13,7 @@ import {
 @Directive({
   selector: '[flip]'
 })
-export class FlipDirective implements OnInit, OnChanges {
+export class FlipDirective implements OnChanges {
   @Input('flip') target: any[]
   @Input('move-class') moveClass: string = 'moving'
 
@@ -27,13 +26,7 @@ export class FlipDirective implements OnInit, OnChanges {
     private zone: NgZone
   ) {}
 
-  ngOnInit (): void {
-    this.pos = this.el.nativeElement.getBoundingClientRect()
-  }
-
   ngOnChanges (changes: SimpleChanges): void {
-    if (!this.pos) return
-
     if (this.moveCb) {
       this.moveCb()
     }
@@ -42,6 +35,8 @@ export class FlipDirective implements OnInit, OnChanges {
 
     const prev = this.pos
     const next = this.pos = native.getBoundingClientRect()
+
+    if (!prev) return
 
     const dx = prev.left - next.left
     const dy = prev.top - next.top
