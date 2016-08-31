@@ -6,32 +6,17 @@
 <script src="__build__.js"></script>
 </head>
 <body>
-  <article class="todoapp">
-    <header class="header">
-      <h1>todos</h1>
-      <input id="js-new-todo" class="new-todo" placeholder="What needs to be done?" autofocus>
-    </header>
+  <article class="main">
+    <h1 class="title">FLIP Animation</h1>
 
-    <!-- This footer should hidden by default and shown when there are todos -->
-    <div class="footer">
-      <ul class="filters">
-        <li>
-          <a id="js-all" href="#/">All</a>
-        </li>
-        <li>
-          <a id="js-active" href="#/active">Active</a>
-        </li>
-        <li>
-          <a id="js-completed" href="#/completed">Completed</a>
-        </li>
-      </ul>
-      <!-- Hidden if no completed items are left ↓ -->
-      <button id="js-clear-completed" class="clear-completed">Clear completed</button>
+    <div class="controls">
+      <button id="js-add-btn" type="button">Add</button>
+      <button id="js-asc-btn" type="button">ASC</button>
+      <button id="js-desc-btn" type="button">DESC</button>
+      <button id="js-shuffle-btn" type="button">Shuffle</button>
     </div>
 
-    <article class="main">
-      <ul id="js-todo-list" class="todo-list"></ul>
-    </article>
+    <ul id="js-list" class="list"></ul>
   </article>
 </body>
 </html>

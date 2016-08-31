@@ -2,92 +2,81 @@ import $ from 'jquery'
 import './flip'
 
 $(() => {
-  const $list = $('#js-todo-list')
-    .on('dblclick', '.js-title', event => {
-      $(event.currentTarget)
-        .closest('li').addClass('editing')
-        .find('.js-edit').focus()
-    })
-    .on('blur', '.js-edit', event => {
-      $(event.currentTarget)
-        .closest('li').removeClass('editing')
-        .find('.js-title')
-        .text(event.currentTarget.value)
-        .focus()
-    })
-    .on('click', '.js-toggle', event => {
-      $(event.currentTarget)
-        .closest('li').toggleClass('completed')
-    })
-    .on('click', '.js-remove', event => {
-      $(event.currentTarget)
-        .closest('li').remove()
+  let uid = 0
+
+  const $list = $('#js-list')
+    .on('click', '.js-remove-btn', event => {
+      $(event.currentTarget).closest('.js-item').remove()
     })
 
-  $('#js-new-todo').on('keypress', event => {
-    if (event.key === 'Enter') {
-      const $input = $(event.currentTarget)
-      const value = $input.val()
-      $input.val('')
-
-      const $item = $itemTemplate.clone()
-      $item.find('.js-title').text(value)
-      $item.prependTo($list)
-    }
-  })
-
-  $('#js-all').on('click', event => {
-    event.preventDefault()
-    $list.children().show()
-  })
-
-  $('#js-active').on('click', event => {
-    event.preventDefault()
-    $list.children()
-      .show()
-      .filter((i, el) => $(el).hasClass('completed'))
-      .hide()
-  })
-
-  $('#js-completed').on('click', event => {
-    event.preventDefault()
-    $list.children()
-      .show()
-      .filter((i, el) => !$(el).hasClass('completed'))
-      .hide()
-  })
-
-  $('#js-clear-completed').on('click', event => {
-    event.preventDefault()
-    $list.children()
-      .filter((i, el) => $(el).hasClass('completed'))
-      .remove()
-  })
+  $('#js-add-btn').on('click', add)
+  $('#js-asc-btn').on('click', asc)
+  $('#js-desc-btn').on('click', desc)
+  $('#js-shuffle-btn').on('click', shuffle)
 
   const $itemTemplate = $(`
-  <li>
-    <div class="view">
-      <input class="js-toggle toggle" type="checkbox">
-      <label class="js-title"></label>
-      <button class="js-remove destroy"></button>
-    </div>
-    <input class="js-edit js-title edit" value="">
+  <li class="js-item item">
+    <span class="js-text"></span>
+    <button class="js-remove-btn remove-btn">&times;</button>
   </li>
   `)
 
-  window.fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(res => res.json())
-    .then(posts => {
-      const $items = posts.map(p => {
-        const $item = $itemTemplate.clone()
-        $item.find('.js-title').text(p.title)
-        if (p.completed) {
-          $item.addClass('completed')
-            .find('.js-toggle').prop('checked', true)
-        }
-        return $item
-      })
-      $list.append($items)
-        .flip()
+  for (let i = 0; i < 100; ++i) {
+    add()
+  }
+  $list.flip()
+
+  function add () {
+    const $item = $itemTemplate.clone()
+    const id = ++uid
+
+    $item
+      .data('id', id)
+      .find('.js-text').text(id)
+
+    insert($item, $list, randomInt($list.children().length))
+  }
+
+  function insert ($el, $parent, index) {
+    const $children = $parent.children()
+    if ($children.length === index) {
+      $parent.append($el)
+    } else {
+      $children.eq(index).before($el)
+    }
+  }
+
+  function asc () {
+    sort($list, (a, b) => {
+      return $(a).data('id') - $(b).data('id')
     })
+  }
+
+  function desc () {
+    sort($list, (a, b) => {
+      return $(b).data('id') - $(a).data('id')
+    })
+  }
+
+  function sort ($list, fn) {
+    $list.children()
+      .sort(fn)
+      .each((i, el) => {
+        $(el).appendTo($list)
+      })
+  }
+
+  function shuffle () {
+    let $children = $list.children()
+    let $shuffled = $()
+    for (let i = $children.length; i > 0; --i) {
+      $shuffled = $shuffled.add($children.eq(randomInt(i)))
+      $children = $children.filter(index => i !== index)
+    }
+    $list.append($shuffled)
+  }
+
+  function randomInt (length) {
+    return Math.floor(Math.random() * length)
+  }
 })

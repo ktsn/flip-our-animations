@@ -38,9 +38,7 @@ function e (names) {
       name = [name, 'js']
     }
     entries[name[0]] = [
-      'todomvc-app-css/index.css',
       './shared.css',
-      'whatwg-fetch',
       `./${name[0]}/main.${name[1]}`
     ]
   })
