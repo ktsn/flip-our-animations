@@ -1,40 +1,39 @@
 import $ from 'jquery'
 import './flip'
 
-$(() => {
-  let uid = 0
+import { range, genId, randomInt } from '../shared'
 
+$(() => {
   const $list = $('#js-list')
-    .on('click', '.js-remove-btn', event => {
-      $(event.currentTarget).closest('.js-item').remove()
-    })
 
   $('#js-add-btn').on('click', add)
+  $('#js-remove-btn').on('click', remove)
   $('#js-asc-btn').on('click', asc)
   $('#js-desc-btn').on('click', desc)
   $('#js-shuffle-btn').on('click', shuffle)
 
-  const $itemTemplate = $(`
-  <li class="js-item item">
-    <span class="js-text"></span>
-    <button class="js-remove-btn remove-btn">&times;</button>
-  </li>
-  `)
+  const $itemTemplate = $('<li class="js-item item"></li>')
 
-  for (let i = 0; i < 100; ++i) {
-    add()
-  }
+  range(10).forEach(add)
   $list.flip()
 
   function add () {
-    const $item = $itemTemplate.clone()
-    const id = ++uid
+    range(10).forEach(() => {
+      const $item = $itemTemplate.clone()
+      const id = genId()
 
-    $item
-      .data('id', id)
-      .find('.js-text').text(id)
+      $item
+        .data('id', id)
+        .text(id)
+      insert($item, $list, randomInt($list.children().length))
+    })
+  }
 
-    insert($item, $list, randomInt($list.children().length))
+  function remove () {
+    range(10).forEach(() => {
+      const $children = $list.children()
+      $children.eq(randomInt($children.length)).remove()
+    })
   }
 
   function insert ($el, $parent, index) {
@@ -74,9 +73,5 @@ $(() => {
       $children = $children.filter(index => i !== index)
     }
     $list.append($shuffled)
-  }
-
-  function randomInt (length) {
-    return Math.floor(Math.random() * length)
   }
 })
