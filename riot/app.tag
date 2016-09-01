@@ -1,107 +1,50 @@
 <app>
-  <section class="todoapp">
-    <header class="header">
-      <h1>todos</h1>
-      <input class="new-todo" placeholder="What needs to be done?" autofocus value={ todoTitle } oninput={ onInputTitle } onkeypress={ onKeyPressTitle }>
-    </header>
-    <footer class="footer">
-      <span class="todo-count"><strong>{ filteredTodos('active').length }</strong> item left</span>
-      <ul class="filters">
-        <li>
-          <a class={ selected: filter === 'all' } onclick={ onChangeFilter } data-filter="all" href="#/">All</a>
-        </li>
-        <li>
-          <a class={ selected: filter === 'active' } onclick={ onChangeFilter } data-filter="active" href="#/active">Active</a>
-        </li>
-        <li>
-          <a class={ selected: filter === 'completed' } onclick={ onChangeFilter } data-filter="completed" href="#/completed">Completed</a>
-        </li>
-      </ul>
-      <button onclick={ onClearCompleted } class="clear-completed">Clear completed</button>
-    </footer>
-    <section class="main">
-      <ul riot-tag="flip" class="todo-list">
-        <li riot-tag="todo" key={ id } each={ parent.filteredTodos(parent.filter) } todo={ this }></li>
-      </ul>
-    </section>
-  </section>
+  <article class="main">
+    <h1 class="title">FLIP Animation</h1>
+
+    <div class="controls">
+      <button type="button" onclick={ add }>Add</button>
+      <button type="button" onclick={ remove }>Remove</button>
+      <button type="button" onclick={ asc }>ASC</button>
+      <button type="button" onclick={ desc }>DESC</button>
+      <button type="button" onclick={ shuffle }>Shuffle</button>
+    </div>
+
+    <ul riot-tag="flip" class="list">
+      <li class="item" each={ item in parent.list } key={ item }>{ item }</li>
+    </ul>
+  </article>
 
   <script>
   import './flip'
-  import './tags/todo'
 
-  this.todoTitle = ''
-  this.todos = []
-  this.filter = 'all'
+  import { range, add, remove, sort, shuffle, randomInt, genId } from '../shared'
 
-  this.on('before-mount', () => {
-    window.fetch('https://jsonplaceholder.typicode.com/todos')
-      .then(res => res.json())
-      .then(data => this.update({ todos: data }))
-  })
+  this.list = range(100).map(genId)
 
-  this.on('update-todo', todo => {
-    this.todos = this.todos.map(t => {
-      if (t.id !== todo.id) return t
-      return todo
-    })
-  })
-
-  this.on('remove-todo', todo => {
-    this.todos = this.todos.filter(t => t.id !== todo.id)
-  })
-
-  filteredTodos (filter) {
-    switch (filter) {
-      case 'all':
-        return this.todos
-      case 'active':
-        return this.todos.filter(t => !t.completed)
-      case 'completed':
-        return this.todos.filter(t => t.completed)
-      default:
-        return []
-    }
+  add () {
+    this.list = range(10).reduce(next => {
+      return add(next, randomInt(next.length), genId())
+    }, this.list)
   }
 
-  onClearCompleted () {
-    this.todos = this.todos.filter(t => !t.completed)
+  remove () {
+    this.list = range(10).reduce(next => {
+      return remove(next, randomInt(next.length))
+    }, this.list)
   }
 
-  onInputTitle (event) {
-    this.todoTitle = event.target.value
-    return true
+  asc () {
+    this.list = sort(this.list, (a, b) => a - b)
   }
 
-  onKeyPressTitle (event) {
-    if (event.key === 'Enter') {
-      this.todos.unshift({
-        id: createId(),
-        title: event.target.value,
-        completed: false,
-        editing: false
-      })
-      this.todoTitle = ''
-    }
-    return true
+  desc () {
+    this.list = sort(this.list, (a, b) => b - a)
   }
 
-  onChangeFilter (event) {
-    this.filter = event.target.dataset.filter
+  shuffle () {
+    this.list = shuffle(this.list)
   }
 
-  function createId () {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    const length = chars.length
-    return createArray(16).map(() => chars[randomInt(length)]).join('')
-  }
-
-  function createArray (length) {
-    return Array.apply(null, Array(16))
-  }
-
-  function randomInt (length) {
-    return Math.floor(Math.random() * length)
-  }
   </script>
 </app>
