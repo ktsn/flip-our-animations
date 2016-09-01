@@ -7,7 +7,7 @@ export default class App extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      list: range(100).map(() => genId())
+      list: range(100).map(genId)
     }
   }
 

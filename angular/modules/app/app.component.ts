@@ -1,46 +1,35 @@
-import { Component, OnInit } from '@angular/core'
-import { Todo } from '../../models/todo'
-import { TodoService } from '../../services/todo.service'
+import { Component } from '@angular/core'
+
+const { range, add, remove, sort, shuffle, randomInt, genId } = require('../../../shared')
 
 @Component({
   selector: 'app',
   templateUrl: './app.html'
 })
-export class AppComponent implements OnInit {
-  todoTitle = ''
-  filter = 'all'
+export class AppComponent {
+  list: number[] = range(100).map(genId)
 
-  constructor(private todoService: TodoService) {}
-
-  ngOnInit () {
-    this.todoService.fetchTodos()
+  add (): void {
+    this.list = range(10).reduce((next: number[]) => {
+      return add(next, randomInt(next.length), genId())
+    }, this.list)
   }
 
-  filteredTodos (filter: 'all' | 'active' | 'completed'): Todo[] {
-    switch (filter) {
-      case 'all':
-        return this.todoService.todos
-      case 'active':
-        return this.todoService.activeTodos
-      case 'completed':
-        return this.todoService.completedTodos
-      default:
-        return []
-    }
+  remove (): void {
+    this.list = range(10).reduce((next: number[]) => {
+      return remove(next, randomInt(next.length))
+    }, this.list)
   }
 
-  removeTodo (todo: Todo): void {
-    this.todoService.removeTodo(todo)
+  asc (): void {
+    this.list = sort(this.list, (a: number, b: number) => a - b)
   }
 
-  clearCompleted (): void {
-    this.todoService.clearCompleted()
+  desc (): void {
+    this.list = sort(this.list, (a: number, b: number) => b - a)
   }
 
-  onKeyPressHeader (event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.todoService.addTodo(this.todoTitle)
-      this.todoTitle = ''
-    }
+  shuffle (): void {
+    this.list = shuffle(this.list)
   }
 }
