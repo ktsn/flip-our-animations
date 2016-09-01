@@ -1,137 +1,69 @@
 import React from 'react'
-import Header from './components/Header'
-import TodoItem from './components/TodoItem'
 import Flip from './Flip'
+
+import { range, add, remove, sort, shuffle, randomInt, genId } from '../shared'
 
 export default class App extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      todoTitle: '',
-      todos: [],
-      filter: 'all'
+      list: range(100).map(() => genId())
     }
   }
 
-  componentWillMount () {
-    window.fetch('https://jsonplaceholder.typicode.com/todos')
-      .then(res => res.json())
-      .then(data => this.setState({ todos: data }))
-  }
-
-  filterTodos (filter) {
-    switch (filter) {
-      case 'active':
-        return this.state.todos.filter(t => !t.completed)
-      case 'completed':
-        return this.state.todos.filter(t => t.completed)
-      case 'all':
-      default:
-        return this.state.todos
-    }
-  }
-
-  addTodo (title) {
+  add () {
     this.setState({
-      todoTitle: '',
-      todos: [
-        {
-          id: createId(),
-          title,
-          editing: false,
-          completed: false
-        },
-        ...this.state.todos
-      ]
+      list: range(10).reduce(next => {
+        return add(next, randomInt(next.length), genId())
+      }, this.state.list)
     })
   }
 
-  updateTodo (todo, updater) {
+  remove () {
     this.setState({
-      todos: this.state.todos.map(t => {
-        return t.id !== todo.id ? t : {
-          ...t,
-          ...updater
-        }
-      })
+      list: range(10).reduce(next => {
+        return remove(next, randomInt(next.length))
+      }, this.state.list)
     })
   }
 
-  removeTodo (todo) {
+  asc () {
+    this.sort((a, b) => a - b)
+  }
+
+  desc () {
+    this.sort((a, b) => b - a)
+  }
+
+  sort (fn) {
     this.setState({
-      todos: this.state.todos.filter(t => t.id !== todo.id)
+      list: sort(this.state.list, fn)
     })
   }
 
-  clearCompleted () {
+  shuffle () {
     this.setState({
-      todos: this.state.todos.filter(t => !t.completed)
+      list: shuffle(this.state.list)
     })
   }
 
   render () {
-    const { todoTitle, filter } = this.state
-
-    const items = this.filterTodos(filter).map(t => (
-      <TodoItem
-        key={t.id}
-        todo={t}
-        onRemove={() => this.removeTodo(t)}
-        onChangeTitle={title => this.updateTodo(t, { title })}
-        onChangeEditing={editing => this.updateTodo(t, { editing })}
-        onChangeCompleted={completed => this.updateTodo(t, { completed })} />
-    ))
-
     return (
-      <section className="todoapp">
-        <Header
-          text={todoTitle}
-          onChange={text => this.setState({ todoTitle: text })}
-          onSubmit={text => this.addTodo(text)}/>
-        <div className="footer">
-          <span className="todo-count">
-            <strong>{this.filterTodos('active').length}</strong> item left
-          </span>
-          <ul className="filters">
-            <li>
-              <a className={this.state.filter === 'all' ? 'selected' : ''}
-                href="#/"
-                onClick={() => this.setState({ filter: 'all' })}>All</a>
-            </li>
-            <li>
-              <a className={this.state.filter === 'active' ? 'selected' : ''}
-                href="#/active"
-                onClick={() => this.setState({ filter: 'active' })}>Active</a>
-            </li>
-            <li>
-              <a className={this.state.filter === 'completed' ? 'selected' : ''}
-                href="#/completed"
-                onClick={() => this.setState({ filter: 'completed' })}>Completed</a>
-            </li>
-          </ul>
-          <button className="clear-completed" onClick={() => this.clearCompleted()}>Clear completed</button>
+      <article className="main">
+        <h1 className="title">FLIP Animation</h1>
+
+        <div className="controls">
+          <button type="button" onClick={() => this.add()}>Add</button>
+          <button type="button" onClick={() => this.remove()}>Remove</button>
+          <button type="button" onClick={() => this.asc()}>ASC</button>
+          <button type="button" onClick={() => this.desc()}>DESC</button>
+          <button type="button" onClick={() => this.shuffle()}>Shuffle</button>
         </div>
-        <section className="main">
-          <label htmlFor="toggle-all">Mark all as complete</label>
-          <Flip className="todo-list" tag="ul">
-            {items}
-          </Flip>
-        </section>
-      </section>
+
+        <Flip tag="ul" className="list">
+          {this.state.list.map(item => <li key={item} className="item">{item}</li>)}
+        </Flip>
+      </article>
     )
   }
-}
-
-function createId () {
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  const length = chars.length
-  return createArray(16).map(() => chars[randomInt(length)]).join('')
-}
-
-function createArray (length) {
-  return Array.apply(null, Array(16))
-}
-
-function randomInt (length) {
-  return Math.floor(Math.random() * length)
 }
